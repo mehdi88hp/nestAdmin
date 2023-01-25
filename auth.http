@@ -1,0 +1,15 @@
+POST http://172.20.20.17:3000/users/signup
+Content-Type: application/json
+
+{
+  "email": "mmhp16@gmail.comvv",
+  "password": "zxczxc"
+}
+
+###
+POST http://172.20.20.17:3000/users/signup
+Content-Type: application/x-www-form-urlencoded
+
+email=mmhp16@gmail.com&password=salamat
+
+###
