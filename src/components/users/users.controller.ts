@@ -14,6 +14,20 @@ export class UsersController {
     console.log(request)
     this.authService.signUp(request.email, request.password)
     return 'successful request';
-    /* !!!!!!!!!!!!!!!! complete this method*/
+  }
+
+  @All('signin')
+  signin(@Body() request: SignupDto) {
+    console.log(request)
+    return this.authService.signIn(request.email, request.password)
+    return 'successful request';
+  }
+
+
+  @All('getMe')
+  getMe(@Body() request: SignupDto) {
+    console.log(request)
+   return  this.authService.getMe(request.email, request.password)
+    return 'successful request';
   }
 }
