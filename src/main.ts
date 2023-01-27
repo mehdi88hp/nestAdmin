@@ -1,14 +1,19 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import {NestFactory} from '@nestjs/core';
+import {AppModule} from './app.module';
 
 // import { ConfigService } from '@nestjs/config';
+const cookieSession = require('cookie-session')
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(AppModule);
 
-  // const configService = app.get(ConfigService);
+    app.use(cookieSession({
+        keys: ['asdasdqwd']
+    }));
 
-  await app.listen(3101);
+    // const configService = app.get(ConfigService);
+
+    await app.listen(3101);
 }
 
 bootstrap();
