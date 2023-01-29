@@ -1,0 +1,4 @@
+POST http://localhost:4002/users/colors/velvet
+
+###
+POST http://localhost:4002/users/colors

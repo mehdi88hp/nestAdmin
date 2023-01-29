@@ -1,4 +1,4 @@
-import { Body, Controller, Post, All } from "@nestjs/common";
+import { Body, Controller, Post, All, Session, Param } from "@nestjs/common";
 import { SignupDto } from "src/components/users/dto/signup.dto";
 import { AuthService } from "src/components/users/services/auth.service";
 
@@ -7,6 +7,16 @@ export class UsersController {
   constructor(
     public authService: AuthService
   ) {
+  }
+
+  @All('/colors/:color')
+  setColor(@Param('color') color: string, @Session() session: any) {
+    session.color = color;
+  }
+
+  @All('/colors')
+  getColor(@Session() session: any) {
+    return session.color;
   }
 
   @All('signup')
@@ -27,7 +37,7 @@ export class UsersController {
   @All('getMe')
   getMe(@Body() request: SignupDto) {
     console.log(request)
-   return  this.authService.getMe(request.email, request.password)
+    return this.authService.getMe(request.email, request.password)
     return 'successful request';
   }
 }
