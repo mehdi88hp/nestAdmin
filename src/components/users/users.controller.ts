@@ -11,33 +11,45 @@ export class UsersController {
 
   @All('/colors/:color')
   setColor(@Param('color') color: string, @Session() session: any) {
-    session.color = color;
+    session.color2 = color;
   }
 
   @All('/colors')
   getColor(@Session() session: any) {
-    return session.color;
+    return session.color3;
   }
 
   @All('signup')
-  signup(@Body() request: SignupDto) {
+  async signup(@Body() request: SignupDto, @Session() session: any) {
     console.log(request)
-    this.authService.signUp(request.email, request.password)
+    const user = await this.authService.signUp(request.email, request.password)
+    session.userId = user._id;
+
     return 'successful request';
   }
 
   @All('signin')
-  signin(@Body() request: SignupDto) {
-    console.log(request)
-    return this.authService.signIn(request.email, request.password)
+  async signin(@Body() request: SignupDto, @Session() session: any) {
+    const user = await this.authService.signIn(request.email, request.password);
+
+    console.log(user, user._id)
+
+    session.userId = user._id;
+
     return 'successful request';
+  }
+
+  @All('signOut')
+  async signOut(@Session() session: any) {
+    session.userId = null;
+
+    return 'successful sign out';
   }
 
 
   @All('getMe')
-  getMe(@Body() request: SignupDto) {
-    console.log(request)
-    return this.authService.getMe(request.email, request.password)
+  getMe(@Session() session: any) {
+    return this.authService.getMe(session.userId)
     return 'successful request';
   }
 }

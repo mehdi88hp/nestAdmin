@@ -19,11 +19,12 @@ export class UsersService {
     //
   }
 
-  async create(email, password) {
+  async create(email: string, password: string) {
     const mongooseResult = await this.usersModel.create({
       email,
       password
     })
+    return mongooseResult;
 
     console.log(mongooseResult)
   }

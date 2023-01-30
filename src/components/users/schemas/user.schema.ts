@@ -7,6 +7,7 @@ export type UserDocument = User & Document;
 export class User {
   static readonly collection = 'users';
 
+  @Prop()
   _id: mongoose.Types.ObjectId;
 
   @Prop({

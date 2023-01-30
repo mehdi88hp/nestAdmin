@@ -1,0 +1,31 @@
+POST {{host}}/users/signup
+Content-Type: application/json
+
+{
+  "email": "mmhp17@gmail.com",
+  "password": "zxczxc"
+}
+
+###
+POST {{host}}/users/signin
+Content-Type: application/x-www-form-urlencoded
+
+email=mmhp17@gmail.com&password=zxczxc
+
+###
+POST {{host}}/users/getMe
+
+###
+POST {{host}}/users/signOut
+
+###
+
+POST {{host}}/users/signIn
+Content-Type: application/json
+
+{
+  "email": "mmhp16@gmail.comvv2",
+  "password": "zxczxc"
+}
+
+###
