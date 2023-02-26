@@ -1,6 +1,8 @@
 import { Body, Controller, Post, All, Session, Param } from "@nestjs/common";
 import { SignupDto } from "src/components/users/dto/signup.dto";
 import { AuthService } from "src/components/users/services/auth.service";
+import { CurrentUser } from "./decorators/current-user.decorator";
+import { User } from "src/components/users/schemas/user.schema";
 
 @Controller('users')
 export class UsersController {
@@ -47,9 +49,14 @@ export class UsersController {
   }
 
 
+  /*  @All('getMe')
+    getMe(@Session() session: any) {
+      return this.authService.getMe(session.userId)
+      return 'successful request';
+    }*/
+
   @All('getMe')
-  getMe(@Session() session: any) {
-    return this.authService.getMe(session.userId)
-    return 'successful request';
+  getMe(@CurrentUser() user: User) {
+    return user;
   }
 }
