@@ -1,0 +1,30 @@
+POST {{host}}/roles/store
+Content-Type: application/json
+
+{
+  "title": "bigHP2",
+  "description": "first test"
+}
+
+#####
+POST {{host}}/roles/show
+Content-Type: application/json
+
+{
+  "title": "bigHP2"
+}
+
+#####
+POST {{host}}/roles/updatePermissions
+Content-Type: application/json
+
+{
+  "roleId": "6405f315e6e08a8e6ddcdb42",
+  "permissions": [
+    "64072620f3e9f5214fe13db7",
+    "6407262af3e9f5214fe13dba",
+    "6407262ff3e9f5214fe13dbd",
+    "64072634f3e9f5214fe13dc0",
+    "64072639f3e9f5214fe13dc3"
+  ]
+}

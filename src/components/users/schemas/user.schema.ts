@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, Model, ObjectId } from "mongoose";
+import { Role } from "./role.schema";
 
 export type UserDocument = User & Document;
 
@@ -7,7 +8,7 @@ export type UserDocument = User & Document;
 export class User {
   static readonly collection = 'users';
 
-  @Prop()
+  // @Prop()
   _id: mongoose.Types.ObjectId;
 
   @Prop({
@@ -20,6 +21,15 @@ export class User {
 
   @Prop()
   password: string;
+
+  @Prop()
+  isAdmin: string;
+
+  @Prop({
+    ref: Role.name,
+    type: mongoose.Schema.Types.ObjectId
+  })
+  roleId;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

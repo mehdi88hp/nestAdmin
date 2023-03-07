@@ -1,0 +1,23 @@
+POST {{host}}/permissions/store
+Content-Type: application/json
+
+{
+  "title": "manage airport",
+  "description": "first test"
+}
+
+#####
+POST {{host}}/permissions/show
+Content-Type: application/json
+
+{
+  "title": "bigHP2"
+}
+
+#####
+POST {{host}}/permissions/all
+Content-Type: application/json
+
+{
+  "title": "bigHP2"
+}

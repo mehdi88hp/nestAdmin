@@ -2,8 +2,8 @@ POST {{host}}/users/signup
 Content-Type: application/json
 
 {
-  "email": "mmhp17@gmail.com",
-  "password": "zxczxc"
+  "email": "asdasd@gmail.com",
+  "password": "test2"
 }
 
 ###
@@ -26,6 +26,16 @@ Content-Type: application/json
 {
   "email": "mmhp17@gmail.com",
   "password": "zxczxc"
+}
+
+###
+
+
+POST {{host}}/users/setRoleId
+Content-Type: application/json
+
+{
+  "roleId": "6405f315e6e08a8e6ddcdb42"
 }
 
 ###

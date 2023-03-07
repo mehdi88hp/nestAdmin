@@ -1,8 +1,12 @@
-import { Body, Controller, Post, All, Session, Param } from "@nestjs/common";
-import { SignupDto } from "src/components/users/dto/signup.dto";
-import { AuthService } from "src/components/users/services/auth.service";
-import { CurrentUser } from "./decorators/current-user.decorator";
-import { User } from "src/components/users/schemas/user.schema";
+import { Body, Controller, Post, All, Session, Param, UseGuards } from "@nestjs/common";
+import { SignupDto } from "../dto/signup.dto";
+import { AuthService } from "../services/auth.service";
+import { CurrentUser } from "../decorators/current-user.decorator";
+import { User } from "../schemas/user.schema";
+import { AuthGuard } from "../guards/auth.guard";
+import { CheckPermissions } from "src/components/users/decorators/check-permissions.decorator";
+import { PermissionAction } from "src/components/users/services/casl-ability-factory.service";
+import { PermissionsGuard } from "src/components/users/guards/permission.guard";
 
 @Controller('users')
 export class UsersController {
@@ -56,7 +60,15 @@ export class UsersController {
     }*/
 
   @All('getMe')
+  @UseGuards(PermissionsGuard)
+  @CheckPermissions([PermissionAction.CREATE, "airport"]) // "Invoice" is the value in name column of objects table
   getMe(@CurrentUser() user: User) {
     return user;
+  }
+
+  @All('setRoleId')
+  @UseGuards(AuthGuard)
+  setRoleId(@CurrentUser() user: User, @Body() request) {
+    return this.authService.setRoleId(user._id, request.roleId);
   }
 }
