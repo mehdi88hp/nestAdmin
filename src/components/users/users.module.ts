@@ -14,6 +14,11 @@ import { PermissionsController } from "./controllers/permissions.controller";
 import { PermissionService } from "./services/permission.service";
 import { CaslAbilityFactory } from "./services/casl-ability-factory.service";
 import { PermissionsGuard } from "./guards/permission.guard";
+import { PassportModule } from '@nestjs/passport';
+import { LocalStrategy } from './sterategies/local.strategy';
+import { JwtModule } from "@nestjs/jwt";
+import { jwt } from "./enums/constants.enum";
+import { JwtStrategy } from "src/components/users/sterategies/jwt.strategy";
 
 
 @Module({
@@ -22,15 +27,26 @@ import { PermissionsGuard } from "./guards/permission.guard";
       {name: User.name, schema: UserSchema, collection: User.collection},
       {name: Role.name, schema: RoleSchema, collection: Role.collection},
       {name: Permission.name, schema: PermissionSchema, collection: Permission.collection},
-    ])
+    ]),
+    PassportModule,
+    JwtModule.register({
+      secret: jwt.secret,
+      signOptions: {expiresIn: '7w'},
+    }),
   ],
-  providers: [UsersService, AuthService,
-    RoleService, PermissionService, PermissionsGuard,
+  providers: [
+    UsersService,
+    AuthService,
+    RoleService,
+    PermissionService,
+    PermissionsGuard,
     CaslAbilityFactory,
     {
       provide: APP_INTERCEPTOR,
       useClass: AuthInterceptor,
     },
+    LocalStrategy,
+    JwtStrategy
   ],
   controllers: [UsersController, RolesController, PermissionsController],
   exports: [PermissionsGuard, CaslAbilityFactory],

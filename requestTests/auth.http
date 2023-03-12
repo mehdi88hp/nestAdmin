@@ -3,7 +3,9 @@ Content-Type: application/json
 
 {
   "email": "asdasd@gmail.com",
-  "password": "test2"
+  "password": "test2",
+  "firstName": "mehdi",
+  "lastName": "hp"
 }
 
 ###
@@ -19,7 +21,6 @@ POST {{host}}/users/getMe
 POST {{host}}/users/signOut
 
 ###
-
 POST {{host}}/users/signIn
 Content-Type: application/json
 

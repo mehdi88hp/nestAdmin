@@ -7,6 +7,7 @@ import { User, UserDocument } from "../schemas/user.schema";
 import mongoose, { Model, Schema } from "mongoose";
 import { Permission } from "src/components/users/schemas/permission.schema";
 import { Role } from "src/components/users/schemas/role.schema";
+import { JwtService } from '@nestjs/jwt';
 
 const scrypt = promisify(_scrypt);
 
@@ -15,25 +16,26 @@ export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     @InjectModel(User.name) private usersModel: Model<UserDocument>,
+    private jwtService: JwtService
   ) {
   }
 
-  async signUp(email: string, password: string) {
+  async signUp(request) {
     //see if email is in use
 
     //has the users password
 
     const salt = randomBytes(8).toString('hex');
 
-    const hash = (await scrypt(password, salt, 32)) as Buffer;
+    const hash = (await scrypt(request.password, salt, 32)) as Buffer;
 
     const result = salt + '.' + hash.toString('hex');
 
-    return this.usersService.create(email, result)
+    return this.usersService.create(request, result)
   }
 
-  async getMe(userId) {
-    console.log(userId)
+  async getMeById(userId) {
+    // console.log(userId)
     const user = await this.usersModel.aggregate([
       {
         $match: {_id: new mongoose.Types.ObjectId(userId)}
@@ -43,26 +45,50 @@ export class AuthService {
     return user.length ? user[0] : null;
   }
 
-  async signIn(email, password) {
-    const user = await this.usersModel.aggregate([
-      {
-        $match: {email: email}
+  async getMeByEmail(email) {
+    const user = await this.usersModel.findOne({
+        email
       }
-    ]).exec();
+    ).exec();
+
+    return user ? {email: user.email, id: user._id} : null;
+  }
+
+  async signIn(email, password) {
+    // const user = await this.usersModel.aggregate([
+    //   {
+    //     $match: {email: email}
+    //   }
+    // ]).exec();
+
+    const user = await this.usersModel.findOne({
+        email: email
+      }
+    ).exec();
+
+    // console.log(user, password, email)
 
     if (!user) {
       throw new NotFoundException('user not found!');
     }
-
-    const [salt, storeHash] = user[0].password.split('.');
+    const [salt, storeHash] = user.password.split('.');
 
     const hash = (await scrypt(password, salt, 32)) as Buffer;
 
     if (storeHash === hash.toString('hex')) {
-      return user[0];
+      return user;
     } else {
       throw new BadRequestException('bad password')
     }
+  }
+
+  async jwtSignIn(user: any) {
+    // console.log(123, user, 999)
+    const payload = {username: user.email, sub: user._id};
+    return {
+      access_token: this.jwtService.sign(payload),
+      user
+    };
   }
 
   async setRoleId(userId, roleId) {

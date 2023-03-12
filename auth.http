@@ -1,3 +1,4 @@
+###
 POST http://nest.local/users/signup
 Content-Type: application/json
 
@@ -22,12 +23,50 @@ Content-Type: application/json
 }
 
 ###
+POST {{host}}/users/test
+Content-Type: application/json
 
-POST http://nest.local/users/signIn
+{
+  "email": "mmhp16@gmail.comvv",
+  "password": "zxczxc"
+}
+
+###
+POST {{host}}/users/profile
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1taHAxNkBnbWFpbC5jb212diIsInN1YiI6IjYzZDEzNTA3NWExNWRkZWM2ZGM2MjFlNiIsImlhdCI6MTY3ODYyODkyNywiZXhwIjoxNjc4NjI4OTg3fQ.6JBays-1grzapGiM-AN3o_ZocAy3xaVSscrNIkg74Uo
+
+{
+  "email": "mmhp16@gmail.comvv",
+  "password": "zxczxc"
+}
+
+###
+
+POST {{host}}/users/signIn
 Content-Type: application/json
 
 {
   "email": "mmhp16@gmail.comvv2",
   "password": "zxczxc"
 }
+
+###
+POST {{host}}/users/jwtSignIn
+Content-Type: application/json
+
+{
+  "email": "mmhp16@gmail.comvv2",
+  "password": "zxczxc"
+}
+
+###
+POST {{host}}/users/signOut
+Content-Type: application/json
+
+{
+  "email": "mmhp16@gmail.comvv2",
+  "password": "zxczxc"
+}
+
 ###

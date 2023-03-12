@@ -1,12 +1,14 @@
-import { Body, Controller, Post, All, Session, Param, UseGuards } from "@nestjs/common";
+import { Body, Controller, Post, All, Session, Param, UseGuards, Request } from "@nestjs/common";
 import { SignupDto } from "../dto/signup.dto";
 import { AuthService } from "../services/auth.service";
 import { CurrentUser } from "../decorators/current-user.decorator";
 import { User } from "../schemas/user.schema";
-import { AuthGuard } from "../guards/auth.guard";
+import { AuthGuard as LocalAuthGuard } from "../guards/auth.guard";
 import { CheckPermissions } from "src/components/users/decorators/check-permissions.decorator";
 import { PermissionAction } from "src/components/users/services/casl-ability-factory.service";
 import { PermissionsGuard } from "src/components/users/guards/permission.guard";
+import { PassportLocalAuthGuard } from "../guards/passport-local-auth.guard";
+import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 
 @Controller('users')
 export class UsersController {
@@ -28,13 +30,17 @@ export class UsersController {
   @All('signup')
   async signup(@Body() request: SignupDto, @Session() session: any) {
     console.log(request)
-    const user = await this.authService.signUp(request.email, request.password)
+    const user = await this.authService.signUp(request)
     session.userId = user._id;
 
-    return 'successful request';
+    return {
+      message: 'successful request',
+      status: true
+    };
   }
 
   @All('signin')
+  @UseGuards(PassportLocalAuthGuard)
   async signin(@Body() request: SignupDto, @Session() session: any) {
     const user = await this.authService.signIn(request.email, request.password);
 
@@ -42,7 +48,19 @@ export class UsersController {
 
     session.userId = user._id;
 
-    return 'successful request';
+    return user;
+  }
+
+  @All('jwtSignIn')
+  @UseGuards(PassportLocalAuthGuard)
+  async jwtSignin(@Request() req) {
+    const user = await this.authService.jwtSignIn(req.user);
+
+    // console.log(user, user._id)
+    //
+    // session.userId = user._id;
+
+    return user;
   }
 
   @All('signOut')
@@ -66,8 +84,23 @@ export class UsersController {
     return user;
   }
 
+  @All('test')
+  @UseGuards(PassportLocalAuthGuard)
+  test(@Request() request) {
+    return request.user;
+  }
+
+  @All('profile')
+  @UseGuards(JwtAuthGuard)
+  // @CheckPermissions([PermissionAction.CREATE, "airport"]) // "Invoice" is the value in name column of objects table
+  getProfile(@CurrentUser() user: User) {
+    console.log(user)
+    return user;
+  }
+
+
   @All('setRoleId')
-  @UseGuards(AuthGuard)
+  @UseGuards(LocalAuthGuard)
   setRoleId(@CurrentUser() user: User, @Body() request) {
     return this.authService.setRoleId(user._id, request.roleId);
   }

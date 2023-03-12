@@ -14,10 +14,16 @@ export class AuthInterceptor implements NestInterceptor {
 
     const request = context.switchToHttp().getRequest();
 
-    const {userId} = request.session;
+    // const {userId} = request.session;
+    // console.log(484884, request.user, 48484)
 
-    if (userId) {
-      const user = await this.authService.getMe(userId);
+    if (request.user
+      && !request.user.password // it's because when we login and go through (PassportLocalAuthGuard) we get the whole user not just the token so we do not need to get user again
+    ) {
+      // console.log('request.user', request.user)
+      // const user = await this.authService.getMeById(request.user.userId);
+      const user = await this.authService.getMeByEmail(request.user.username);
+
       request.user = user;
     }
     // else {
