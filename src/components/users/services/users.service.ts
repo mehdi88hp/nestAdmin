@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { User, UserDocument } from "../schemas/user.schema";
-import { Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import { SignupDto } from "../dto/signup.dto";
 
 @Injectable()
@@ -39,4 +39,21 @@ export class UsersService {
     }
 
   }
+
+  async setProfile(user,request){
+      const users = await this.usersModel.findOneAndUpdate(
+          {_id: new mongoose.Types.ObjectId(user.id)},
+          {$set: {
+              firstName:request.firstName,
+              lastName:request.lastName,
+              country:request.country,
+              age:request.age,
+              }},
+          {upsert: true}
+      ).exec()
+
+      return 'ok'
+  }
+
+
 }

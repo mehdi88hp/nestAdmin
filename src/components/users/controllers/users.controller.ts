@@ -1,5 +1,6 @@
-import { Body, Controller, Post, All, Session, Param, UseGuards, Request } from "@nestjs/common";
+import { Body, Controller, Post, All, Session, Param, UseGuards, Request, Res, Req } from "@nestjs/common";
 import { SignupDto } from "../dto/signup.dto";
+import { SetProfileDto } from "../dto/set-profile.dto";
 import { AuthService } from "../services/auth.service";
 import { CurrentUser } from "../decorators/current-user.decorator";
 import { User } from "../schemas/user.schema";
@@ -9,11 +10,18 @@ import { PermissionAction } from "src/components/users/services/casl-ability-fac
 import { PermissionsGuard } from "src/components/users/guards/permission.guard";
 import { PassportLocalAuthGuard } from "../guards/passport-local-auth.guard";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
+import { UsersService } from "../services/users.service";
+import { Response, Request as RequestType } from 'express';
+import { AuthGuard } from "@nestjs/passport";
+import moment from "moment";
+import { ConfigService } from "@nestjs/config";
 
 @Controller('users')
 export class UsersController {
   constructor(
-    public authService: AuthService
+    public authService: AuthService,
+    protected configService: ConfigService,
+    public usersService: UsersService
   ) {
   }
 
@@ -53,12 +61,20 @@ export class UsersController {
 
   @All('jwtSignIn')
   @UseGuards(PassportLocalAuthGuard)
-  async jwtSignin(@Request() req) {
+  async jwtSignin(@Request() req, @Res({passthrough: true}) response: Response) {
     const user = await this.authService.jwtSignIn(req.user);
 
-    // console.log(user, user._id)
+    // const now = new Date();
     //
-    // session.userId = user._id;
+    const oneWeek = 14 * 24 * 3600 * 1000; //2 weeks
+
+    console.log(this.configService.get('general.auth.cookieDomain'))
+    response.cookie('auth-cookie',
+      user.access_token, {
+        domain: this.configService.get('general.auth.cookieDomain'),
+        httpOnly: true,
+        expires: new Date(Date.now() + oneWeek)
+      });
 
     return user;
   }
@@ -93,11 +109,18 @@ export class UsersController {
   @All('profile')
   @UseGuards(JwtAuthGuard)
   // @CheckPermissions([PermissionAction.CREATE, "airport"]) // "Invoice" is the value in name column of objects table
-  getProfile(@CurrentUser() user: User) {
-    console.log(user)
+  getProfile(@CurrentUser() user: User, @Req() request: RequestType) {
+    console.log(555, request.cookies)
     return user;
   }
 
+  @All('setProfile')
+  @UseGuards(JwtAuthGuard)
+  // @CheckPermissions([PermissionAction.CREATE, "airport"]) // "Invoice" is the value in name column of objects table
+  setProfile(@CurrentUser() user: User, @Body() request: SetProfileDto) {
+    console.log(user, request)
+    return this.usersService.setProfile(user, request);
+  }
 
   @All('setRoleId')
   @UseGuards(LocalAuthGuard)

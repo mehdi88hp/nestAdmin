@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import * as cookieParser from 'cookie-parser';
 
 // import { ConfigService } from '@nestjs/config';
 // const cookieSession = require('cookie-session')
@@ -13,7 +14,8 @@ let redisClient = createClient({
   legacyMode: true,
 
 })
-redisClient.connect().catch(console.error)
+redisClient.connect().catch(console.error);
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -36,7 +38,7 @@ async function bootstrap() {
   )
   app.enableCors({
     origin: [
-      'http://localhost:4102',
+      'http://mongo.last.local',
     ],
     // methods: ["GET", "POST"],
     methods: ["*"],
@@ -50,7 +52,10 @@ async function bootstrap() {
   //   next();
   // });
 
-  await app.listen(4002);
+  app.use(cookieParser());
+
+
+  await app.listen(4102);
 }
 
 bootstrap();

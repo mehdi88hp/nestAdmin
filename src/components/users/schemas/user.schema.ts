@@ -23,6 +23,18 @@ export class User {
   password: string;
 
   @Prop()
+  firstName: string;
+
+  @Prop()
+  lastName: string;
+
+  @Prop()
+  country: string;
+
+  @Prop()
+  age: number;
+
+  @Prop()
   isAdmin: string;
 
   @Prop({

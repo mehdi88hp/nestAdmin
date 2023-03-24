@@ -15,6 +15,12 @@ Content-Type: application/x-www-form-urlencoded
 email=mmhp17@gmail.com&password=zxczxc
 
 ###
+POST {{host}}/users/jwtSignIn
+Content-Type: application/x-www-form-urlencoded
+
+email=mmhp17@gmail.com&password=zxczxc
+
+###
 POST {{host}}/users/getMe
 
 ###

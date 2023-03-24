@@ -8,6 +8,7 @@ export const CurrentUser = createParamDecorator(
 
     const request = context.switchToHttp().getRequest();
 
-    console.log(11, request.session.userId, 44)
+    console.log(101, request.user, 4400)
+    console.log(11, request.session, 44)
     return request.user
   })

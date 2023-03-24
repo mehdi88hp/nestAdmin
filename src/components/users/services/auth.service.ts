@@ -8,6 +8,8 @@ import mongoose, { Model, Schema } from "mongoose";
 import { Permission } from "src/components/users/schemas/permission.schema";
 import { Role } from "src/components/users/schemas/role.schema";
 import { JwtService } from '@nestjs/jwt';
+import {CurrentUser} from "../decorators/current-user.decorator";
+import moment from 'moment'
 
 const scrypt = promisify(_scrypt);
 
@@ -51,7 +53,7 @@ export class AuthService {
       }
     ).exec();
 
-    return user ? {email: user.email, id: user._id} : null;
+    return user ?? null;
   }
 
   async signIn(email, password) {
@@ -67,7 +69,7 @@ export class AuthService {
     ).exec();
 
     // console.log(user, password, email)
-
+    console.log('signIn service',user)
     if (!user) {
       throw new NotFoundException('user not found!');
     }

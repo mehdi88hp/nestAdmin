@@ -3,6 +3,7 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { Airport, AirportSchema } from "./schemas/airport.schema";
 import { AirportsController } from "src/components/airports/airports.controller";
 import { AirportsService } from "src/components/airports/services/airports.service";
+import { CookieService } from "src/components/airports/services/cookie.service";
 
 
 @Module({
@@ -15,10 +16,11 @@ import { AirportsService } from "src/components/airports/services/airports.servi
     AirportsController
   ],
   providers: [
-    AirportsService
+    AirportsService,
+    CookieService
   ],
   exports: [
-    //
+    CookieService
   ],
 })
 export class AirportsModule {
