@@ -57,7 +57,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     ) {
       return req.cookies['auth-cookie'];
     } else {
-      console.log('not okkkkkkkkkkkkkkkkkk', req.cookies)
+      console.log('cookie has not found [auth-cookie]', req.cookies)
     }
     return null;
   }

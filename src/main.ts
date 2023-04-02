@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
+import { useContainer } from 'class-validator';
 
 // import { ConfigService } from '@nestjs/config';
 // const cookieSession = require('cookie-session')
@@ -38,7 +39,7 @@ async function bootstrap() {
   )
   app.enableCors({
     origin: [
-      'http://mongo.last.local',
+      'http://ui.eng.local',
     ],
     // methods: ["GET", "POST"],
     methods: ["*"],
@@ -52,10 +53,14 @@ async function bootstrap() {
   //   next();
   // });
 
+
+  //define useContainer in main.ts file
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
+
   app.use(cookieParser());
 
 
-  await app.listen(4102);
+  await app.listen(3101);
 }
 
 bootstrap();
