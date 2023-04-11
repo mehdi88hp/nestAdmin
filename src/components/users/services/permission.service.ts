@@ -65,8 +65,8 @@ export class PermissionService {
         }
       },
     ]).exec();
-
-    return model[0].newRole.permissions.map(i => i.title);
+    console.log(234, model, user)
+    return model.length ? model[0].newRole.permissions.map(i => i.title) : [];
   }
 
 }

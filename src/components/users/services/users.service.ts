@@ -40,19 +40,22 @@ export class UsersService {
 
   }
 
-  async setProfile(user,request){
-      const users = await this.usersModel.findOneAndUpdate(
-          {_id: new mongoose.Types.ObjectId(user.id)},
-          {$set: {
-              firstName:request.firstName,
-              lastName:request.lastName,
-              country:request.country,
-              age:request.age,
-              }},
-          {upsert: true}
-      ).exec()
+  async setProfile(user, request) {
+    // console.log(request, 324234)
+    const users = await this.usersModel.findOneAndUpdate(
+      {_id: new mongoose.Types.ObjectId(user.id)},
+      {
+        $set: {
+          firstName: request.firstName,
+          lastName: request.lastName,
+          country: request.country,
+          age: request.age,
+        }
+      },
+      {upsert: true}
+    ).exec()
 
-      return 'ok'
+    return 'ok'
   }
 
 

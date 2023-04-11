@@ -19,6 +19,8 @@ import { LocalStrategy } from './sterategies/local.strategy';
 import { JwtModule } from "@nestjs/jwt";
 import { jwt } from "./enums/constants.enum";
 import { JwtStrategy } from "src/components/users/sterategies/jwt.strategy";
+import { ValidationsModule } from "src/components/validations/validations.module";
+import { CustomEmailValidation } from "src/components/users/rules/custom-email-validation";
 
 
 @Module({
@@ -33,6 +35,7 @@ import { JwtStrategy } from "src/components/users/sterategies/jwt.strategy";
       secret: jwt.secret,
       signOptions: {expiresIn: '30d'},
     }),
+    ValidationsModule
   ],
   providers: [
     UsersService,
@@ -46,7 +49,8 @@ import { JwtStrategy } from "src/components/users/sterategies/jwt.strategy";
       useClass: AuthInterceptor,
     },
     LocalStrategy,
-    JwtStrategy
+    JwtStrategy,
+    CustomEmailValidation
   ],
   controllers: [UsersController, RolesController, PermissionsController],
   exports: [PermissionsGuard, CaslAbilityFactory],

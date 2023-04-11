@@ -10,9 +10,10 @@ export class AuthInterceptor implements NestInterceptor {
   }
 
   async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
-    console.log('Before...');
-
+    console.log('Before Intercept...');
     const request = context.switchToHttp().getRequest();
+
+    // console.log(request.email, 'reqqqq');
 
     // const {userId} = request.session;
     // console.log(484884, request.user, 48484)

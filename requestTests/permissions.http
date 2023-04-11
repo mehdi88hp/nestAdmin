@@ -2,7 +2,8 @@ POST {{host}}/permissions/store
 Content-Type: application/json
 
 {
-  "title": "manage airport",
+  "email": "manage posts2",
+  "title": "manage posts2",
   "description": "first test"
 }
 
@@ -16,6 +17,14 @@ Content-Type: application/json
 
 #####
 POST {{host}}/permissions/all
+Content-Type: application/json
+
+{
+  "title": "bigHP2"
+}
+
+#####
+POST {{host}}/permissions/test
 Content-Type: application/json
 
 {

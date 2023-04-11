@@ -7,13 +7,19 @@ import { User } from "src/components/users/schemas/user.schema";
 @Controller('permissions')
 export class PermissionsController {
   constructor(
-    public permissionService: PermissionService
+    public permissionService: PermissionService,
   ) {
   }
 
+  @All('test')
+  async test() {
+    return 'successful request';
+  }
+
   @All('store')
-  async signup(@Body() request: MakePermissionsDto) {
-    console.log(request)
+  async store(
+    @Body() request: MakePermissionsDto
+  ) {
     const permission = await this.permissionService.store(request.title, request.description)
 
     return 'successful request';

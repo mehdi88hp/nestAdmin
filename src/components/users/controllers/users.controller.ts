@@ -1,4 +1,4 @@
-import { Body, Controller, Post, All, Session, Param, UseGuards, Request, Res, Req } from "@nestjs/common";
+import { Body, Controller, Post, All, Session, Param, UseGuards, Request, Res, Req, UsePipes, ValidationPipe } from "@nestjs/common";
 import { SignupDto } from "../dto/signup.dto";
 import { SetProfileDto } from "../dto/set-profile.dto";
 import { AuthService } from "../services/auth.service";
@@ -94,9 +94,11 @@ export class UsersController {
     }*/
 
   @All('getMe')
-  @UseGuards(PermissionsGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @CheckPermissions([PermissionAction.CREATE, "airport"]) // "Invoice" is the value in name column of objects table
   getMe(@CurrentUser() user: User) {
+
+    //TODO: I NEED TO CHECK THE PROCESS OF LOGIN AND GET PROFILE BY COOKIE (FROM BROWSER URL)
     return user;
   }
 
@@ -116,9 +118,13 @@ export class UsersController {
 
   @All('setProfile')
   @UseGuards(JwtAuthGuard)
+  // @UsePipes(new ValidationPipe({transform: true}))
   // @CheckPermissions([PermissionAction.CREATE, "airport"]) // "Invoice" is the value in name column of objects table
-  setProfile(@CurrentUser() user: User, @Body() request: SetProfileDto) {
-    console.log(user, request)
+  setProfile(@Body() request: SetProfileDto,
+             @CurrentUser() user: User) {
+
+    // console.log('mehdi', user)
+
     return this.usersService.setProfile(user, request);
   }
 

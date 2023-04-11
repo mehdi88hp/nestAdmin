@@ -10,7 +10,7 @@ export class RolesController {
   }
 
   @All('store')
-  async signup(@Body() request: MakeRolesDto) {
+  async store(@Body() request: MakeRolesDto) {
     console.log(request)
     const role = await this.roleService.store(request.title, request.description)
 

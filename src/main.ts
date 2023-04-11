@@ -1,24 +1,29 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
+import { useContainer } from 'class-validator';
+import { ValidationPipe } from "@nestjs/common";
 
-// import { ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 // const cookieSession = require('cookie-session')
 const session = require("express-session")
 let RedisStore = require("connect-redis")(session)
 const cors = require('cors');
 const {createClient} = require("redis")
-let redisClient = createClient({
-  // redis[s]://[[username][:password]@][host][:port][/db-number] See redis and
-  url: "redis://cache:6379",
-  legacyMode: true,
-
-})
-redisClient.connect().catch(console.error);
 
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const configService = app.get(ConfigService);
+
+  let redisClient = createClient({
+    // redis[s]://[[username][:password]@][host][:port][/db-number] See redis and
+    url: configService.get('general.redisUri'),
+    legacyMode: true,
+
+  })
+  redisClient.connect().catch(console.error);
 
   /*    app.use(cookieSession({
           keys: ['asdasdqwd']
@@ -27,6 +32,9 @@ async function bootstrap() {
   app.use(session({
     keys: ['asdasdqwd']
   }));*/
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true
+  }));
 
   app.use(
     session({
@@ -36,10 +44,10 @@ async function bootstrap() {
       resave: false,
     })
   )
+
+  console.log(configService.get('general.allowedCorsUrls'))
   app.enableCors({
-    origin: [
-      'http://mongo.last.local',
-    ],
+    origin: configService.get('general.allowedCorsUrls'),
     // methods: ["GET", "POST"],
     methods: ["*"],
     credentials: true,
@@ -53,6 +61,7 @@ async function bootstrap() {
   // });
 
   app.use(cookieParser());
+  useContainer(app.select(AppModule), {fallbackOnErrors: true});
 
 
   await app.listen(4102);

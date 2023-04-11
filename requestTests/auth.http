@@ -22,6 +22,7 @@ email=mmhp17@gmail.com&password=zxczxc
 
 ###
 POST {{host}}/users/getMe
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1taHAxN0BnbWFpbC5jb20iLCJzdWIiOiI2M2Q3YjJjZWZlNjY1MjFiY2QwNzQwYTciLCJpYXQiOjE2ODA5NTMyMjEsImV4cCI6MTY4MzU0NTIyMX0.gCAots70OuFCFijpbUPrXXNw6K3rPx4DVfDzcrPySb0
 
 ###
 POST {{host}}/users/signOut
@@ -46,3 +47,13 @@ Content-Type: application/json
 }
 
 ###
+POST {{host}}/users/setProfile
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1taHAxN0BnbWFpbC5jb20iLCJzdWIiOiI2M2Q3YjJjZWZlNjY1MjFiY2QwNzQwYTciLCJpYXQiOjE2ODA5NTMyMjEsImV4cCI6MTY4MzU0NTIyMX0.gCAots70OuFCFijpbUPrXXNw6K3rPx4DVfDzcrPySb0
+
+{
+  "email": "mmhp17@gmail.com",
+  "password": "zxczxc",
+  "firstName": "medhdo2",
+  "lastName": "hpo"
+}
