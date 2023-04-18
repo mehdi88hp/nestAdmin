@@ -58,5 +58,43 @@ export class UsersService {
     return 'ok'
   }
 
+  async getUsersList(filters, page, pageSize) {
+    const users = await this.usersModel.aggregate([
+      {
+        $facet: {
+          data: [
+            {$match: {}},
+            {$skip: pageSize * (page - 1)},
+            {$limit: pageSize},
+            {
+              $project: {
+                id: "$_id",
+                email: 1,
+                firstName: 1,
+                lastName: 1,
+              }
+            },
+          ],
+          totalCount: [
+            {"$count": "count"},
+          ]
+        }
+      },
+      {
+        $unwind: {
+          path: '$totalCount'
+        }
+      }, {
+        $project: {
+          data: 1,
+          totalCount: "$totalCount.count",
+        }
+      }
+    ])
+      .exec()
+
+    return users[0]
+  }
+
 
 }

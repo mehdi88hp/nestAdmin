@@ -1,4 +1,4 @@
-import { Body, Controller, Post, All, Session, Param, UseGuards, Request, Res, Req, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Post, All, Session, Param, UseGuards, Request, Res, Req, UsePipes, ValidationPipe, Get, Query } from "@nestjs/common";
 import { SignupDto } from "../dto/signup.dto";
 import { SetProfileDto } from "../dto/set-profile.dto";
 import { AuthService } from "../services/auth.service";
@@ -15,6 +15,7 @@ import { Response, Request as RequestType } from 'express';
 import { AuthGuard } from "@nestjs/passport";
 import moment from "moment";
 import { ConfigService } from "@nestjs/config";
+import { usersListDto } from "../dto/users.dto";
 
 @Controller('users')
 export class UsersController {
@@ -132,5 +133,12 @@ export class UsersController {
   @UseGuards(LocalAuthGuard)
   setRoleId(@CurrentUser() user: User, @Body() request) {
     return this.authService.setRoleId(user._id, request.roleId);
+  }
+
+  @Get('/')
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @CheckPermissions([PermissionAction.CREATE, "airport"]) // "Invoice" is the value in name column of objects table
+  getUsersList(@CurrentUser() user: User, @Query() request: usersListDto) {
+    return this.usersService.getUsersList(request.filters, request.page, request.pageSize);
   }
 }
