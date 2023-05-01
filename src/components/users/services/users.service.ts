@@ -6,14 +6,6 @@ import { SignupDto } from "../dto/signup.dto";
 
 @Injectable()
 export class UsersService {
-  find() {
-    // this.repo.find()
-  }
-
-  findOne() {
-    // this.repo.findOne(id)
-  }
-
   constructor(
     @InjectModel(User.name) private usersModel: Model<UserDocument>,
   ) {
@@ -96,5 +88,49 @@ export class UsersService {
     return users[0]
   }
 
+  async getUserDetail(userId) {
+    const user = await this.usersModel.aggregate([
+      {
+        $match: {_id: new mongoose.Types.ObjectId(userId)}
+      },
+      {
+        $lookup: {
+          as: 'role',
+          from: 'roles',
+          localField: 'roleId',
+          foreignField: '_id',
+          pipeline: [
+            {
+              $lookup: {
+                from: 'permissions',
+                foreignField: '_id',
+                localField: 'permissions',
+                // as: 'newPermissions',
+                as: 'permissions',
+              }
+            }
+          ],
+        }
+      },
+      {
+        $project: {
+          email: 1,
+          firstName: 1,
+          lastName: 1,
+          age: 1,
+          country: 1,
+          role: {
+            title: 1,
+            description: 1,
+            permissions: {
+              title: 1,
+              description: 1,
+            },
+          }
+        }
+      }
+    ]).exec();
 
+    return user.length ? user[0] : null;
+  }
 }

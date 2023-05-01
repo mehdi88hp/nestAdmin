@@ -117,6 +117,13 @@ export class UsersController {
     return user;
   }
 
+  @All(':id')
+  // @UseGuards(JwtAuthGuard)
+  // @CheckPermissions([PermissionAction.CREATE, "airport"]) // "Invoice" is the value in name column of objects table
+  getUserDetail(@Param() params: any) {
+    return this.usersService.getUserDetail(params.id)
+  }
+
   @All('setProfile')
   @UseGuards(JwtAuthGuard)
   // @UsePipes(new ValidationPipe({transform: true}))
