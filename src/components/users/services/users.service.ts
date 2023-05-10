@@ -133,4 +133,23 @@ export class UsersService {
 
     return user.length ? user[0] : null;
   }
+
+  async setUserDetail(request) {
+    // console.log(request, 324234)
+    const users = await this.usersModel.findOneAndUpdate(
+      {_id: new mongoose.Types.ObjectId(request.userId)},
+      {
+        $set: {
+          email: request.email,
+          firstName: request.firstName,
+          lastName: request.lastName,
+          country: request.country,
+          age: request.age,
+        }
+      },
+      {upsert: true}
+    ).exec()
+
+    return 'ok'
+  }
 }

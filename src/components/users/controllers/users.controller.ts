@@ -117,11 +117,20 @@ export class UsersController {
     return user;
   }
 
-  @All(':id')
+  @Get(':id')
   // @UseGuards(JwtAuthGuard)
   // @CheckPermissions([PermissionAction.CREATE, "airport"]) // "Invoice" is the value in name column of objects table
   getUserDetail(@Param() params: any) {
     return this.usersService.getUserDetail(params.id)
+  }
+
+  @Post(':id')
+  // @UseGuards(JwtAuthGuard)
+  // @CheckPermissions([PermissionAction.CREATE, "airport"]) // "Invoice" is the value in name column of objects table
+  setUserDetail(
+    @Body() request: SetProfileDto
+  ) {
+    return this.usersService.setUserDetail(request)
   }
 
   @All('setProfile')

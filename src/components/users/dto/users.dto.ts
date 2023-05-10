@@ -1,5 +1,6 @@
 import { Allow, Validate } from "class-validator";
 import { Type } from "class-transformer";
+import { CustomEmailValidation } from "src/components/users/rules/custom-email-validation";
 
 export class usersListDto {
 
@@ -14,4 +15,19 @@ export class usersListDto {
   @Type(() => Number)
   readonly pageSize: number = 3;
 
+}
+
+export class SetUserDetail {
+  @Allow()
+  email: string;
+
+  userId: string;
+
+  firstName: string;
+
+  lastName: string;
+
+  country: string;
+
+  age: number;
 }
